@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:neitorvet/src/services/auth_service.dart';
 import 'package:neitorvet/src/utils/responsive.dart';
+import 'package:provider/provider.dart';
 // import 'package:provider/provider.dart';
 
 class ChatMessage extends StatelessWidget {
@@ -17,14 +19,14 @@ class ChatMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Responsive size = Responsive.of(context);
-    // final authService = Provider.of(context, listen: false);
+    final authService = Provider.of<AuthService>(context, listen: false);
     return FadeTransition(
       opacity: animationController,
       child: SizeTransition(
         sizeFactor:
             CurvedAnimation(parent: animationController, curve: Curves.easeOut),
         child: Container(
-            child: this.uid == '123'
+            child: this.uid == authService.usuario.uid
             // child: _myMessage(size)
             ? _myMessage(size)
             : _notMessage(size),
@@ -38,7 +40,7 @@ class ChatMessage extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: Container(
         padding: EdgeInsets.symmetric(
-            horizontal: size.iScreen(1.5), vertical: size.iScreen(0.5)),
+            horizontal: size.iScreen(1.5), vertical: size.iScreen(0.8)),
         margin: EdgeInsets.only(
           bottom: size.iScreen(0.3),
           left: size.iScreen(10.0),
@@ -47,12 +49,13 @@ class ChatMessage extends StatelessWidget {
         child: Text(
           this.texto,
           style: GoogleFonts.roboto(
-              fontSize: size.iScreen(1.5),
+              fontSize: size.iScreen(1.9),
               color: Colors.white,
               fontWeight: FontWeight.normal),
         ),
         decoration: BoxDecoration(
-            color: Color(0xFF4D9EF6),
+            // color: Color(0xFF963594),
+            color: Color(0xFF963594),
             borderRadius: BorderRadius.only(
               topRight: Radius.circular(10.0),
               topLeft: Radius.circular(10.0),
@@ -76,7 +79,7 @@ class ChatMessage extends StatelessWidget {
         child: Text(
           this.texto,
           style: GoogleFonts.roboto(
-              fontSize: size.iScreen(1.5),
+              fontSize: size.iScreen(1.9),
               color: Colors.black,
               fontWeight: FontWeight.normal),
         ),

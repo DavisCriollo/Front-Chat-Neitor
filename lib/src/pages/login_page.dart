@@ -1,17 +1,31 @@
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:neitorvet/src/helpers/mostar_alerta.dart';
 import 'package:neitorvet/src/pages/recuperarContrasena_page.dart';
+import 'package:neitorvet/src/services/auth_service.dart';
+import 'package:neitorvet/src/services/socket_service.dart';
 import 'package:neitorvet/src/utils/responsive.dart';
+import 'package:neitorvet/src/widget/boton_login.dart';
 import 'package:neitorvet/src/widget/headers.dart';
 import 'package:neitorvet/src/widget/inputs.dart';
+import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final emailControl = TextEditingController();
+  final passwordControl = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final Responsive size = Responsive.of(context);
+    final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
     return Scaffold(
       backgroundColor: Color(0xFFDEEAF6),
       body: SafeArea(
@@ -86,6 +100,7 @@ class LoginPage extends StatelessWidget {
                                       padding: EdgeInsets.symmetric(
                                           horizontal: size.iScreen(0.5)),
                                       child: InputsText(
+                                        textColtroller: emailControl,
                                         size: size,
                                         hintsText: ' Correo',
                                         obscureText: false,
@@ -128,6 +143,7 @@ class LoginPage extends StatelessWidget {
                                           horizontal: size.iScreen(0.5)),
                                       child: InputsText(
                                         size: size,
+                                        textColtroller: passwordControl,
                                         hintsText: ' Contraseña',
                                         obscureText: true,
                                         keyboardType: TextInputType.text,
@@ -140,32 +156,26 @@ class LoginPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: size.iScreen(2.0)),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Color(0XFF963594),
-                                border:
-                                    Border.all(width: 1.5, color: Colors.white),
-                                borderRadius: BorderRadius.circular(8.0)),
-                            width: size.wScreen(100.0),
-                            height: size.iScreen(5.5),
-                            child: FlatButton(
-                              splashColor: Colors.transparent,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: size.iScreen(2.0)),
-                              onPressed: () {
-                                Navigator.pushReplacementNamed(context, 'home');
-                              },
-                              child: Text(
-                                'Ingresar',
-                                style: GoogleFonts.roboto(
-                                  fontSize: size.iScreen(2.5),
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
+                        BtnLogin(
+                          size: size,
+                          onpressed:  () async {
+                                FocusScope.of(context).unfocus();
+                                  final loginOk= await authService.login(emailControl.text.trim(),
+                                      passwordControl.text.trim());
+                                  emailControl.text = "";
+                                  passwordControl.text = "";
+
+                                  if(loginOk)
+                                  {
+                                    socketService.connect();
+                                  Navigator.pushReplacementNamed(context, 'home');
+                                    
+                                  }
+                                  else
+                                  {
+                                    mostarAlerta(context,'Login Incorrecto','Revise sus credenciales');
+                                  }
+                                },
                         ),
                         Container(
                           margin: EdgeInsets.only(

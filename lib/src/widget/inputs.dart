@@ -9,6 +9,7 @@ class InputsText extends StatelessWidget {
   final int maxLines;
   final IconData suffix;
   final TextInputType keyboardType;
+  final TextEditingController textColtroller;
 
   final bool obscureText;
   InputsText({
@@ -19,6 +20,7 @@ class InputsText extends StatelessWidget {
     this.suffix,
     this.hintsText,
     this.maxLines=1,
+     this.textColtroller,
   });
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class InputsText extends StatelessWidget {
       width: size.wScreen(100),
       // margin: EdgeInsets.only(top: size.iScreen(1.5)),
       child: TextField(
+        controller: this.textColtroller,
         maxLines:(this.maxLines>1)?this.maxLines:1,
         enableInteractiveSelection: false,
         keyboardType: this.keyboardType,

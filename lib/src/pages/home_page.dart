@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+// import 'package:neitorvet/src/services/auth_service.dart';
+// import 'package:neitorvet/src/services/socket_service.dart';
+
 import 'package:neitorvet/src/utils/responsive.dart';
 import 'package:neitorvet/src/widget/elementosHome.dart';
 import 'package:neitorvet/src/widget/menu_Drower.dart';
+// import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final Responsive size = Responsive.of(context);
+    // final socketService = Provider.of<SocketService>(context);
+     final Responsive size = Responsive.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -15,9 +20,21 @@ class HomePage extends StatelessWidget {
           style: GoogleFonts.roboto(
               fontSize: size.iScreen(3), fontWeight: FontWeight.bold),
         ),
+        // actions: [
+        //   Container(
+        //       margin: EdgeInsets.symmetric(horizontal: size.iScreen(2.0)),
+        //       child: (socketService.serverStatus == ServerStatus.Online)
+                  // ? Icon(
+        //               Icons.check_circle,
+        //               color: Colors.white,
+        //             )
+        //           : Icon(
+        //               Icons.offline_bolt,
+        //               color: Colors.red,
+        //             )),
+        // ],
       ),
-      // drawer: MenuHome(),
-      drawer: MenuPrincipal(),
+       drawer: MenuPrincipal(),
       body: Container(
         width: size.wScreen(100),
         height: size.hScreen(100),

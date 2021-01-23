@@ -1,14 +1,18 @@
-
-
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:neitorvet/src/services/auth_service.dart';
+import 'package:neitorvet/src/services/socket_service.dart';
+
 import 'package:neitorvet/src/utils/responsive.dart';
+import 'package:provider/provider.dart';
 
 class MenuPrincipal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+      final socketService = Provider.of<SocketService>(context);
+    final usuario = authService.usuario;
     final Responsive size = Responsive.of(context);
     return Drawer(
       child: Container(
@@ -49,7 +53,7 @@ class MenuPrincipal extends StatelessWidget {
                       alignment: Alignment.center,
                       // color:Colors .red,
                       margin: EdgeInsets.only(top: size.iScreen(2.0)),
-                      child: Text('Jonathan Javier Loor loor ',
+                      child: Text('${usuario.email}',
                           textAlign: TextAlign.center,
                           style: GoogleFonts.roboto(
                               fontSize: size.iScreen(2.0),
@@ -75,7 +79,9 @@ class MenuPrincipal extends StatelessWidget {
                 FontAwesomeIcons.chevronRight,
                 size: size.iScreen(1.6),
               ),
-              onTap: () {},
+              onTap: () {
+               
+              },
             ),
             ListTile(
               title: Text('Cerrar Sesión',
@@ -88,7 +94,13 @@ class MenuPrincipal extends StatelessWidget {
                 FontAwesomeIcons.chevronRight,
                 size: size.iScreen(1.6),
               ),
-              onTap: () {},
+              onTap: () {
+             
+               socketService.disconnect();
+                Navigator.pushReplacementNamed(context, 'login');
+                AuthService.deleteToken();
+               
+              },
             ),
           ],
         ),
@@ -130,7 +142,7 @@ class _ListaOpciones extends StatelessWidget {
             title: 'Chat',
             page: 'usuarios',
             size: size),
-             _ItemsMenu(
+        _ItemsMenu(
             icon: FontAwesomeIcons.shareAlt,
             title: 'Compartir',
             page: 'login',
@@ -174,7 +186,6 @@ class _ItemsMenu extends StatelessWidget {
             size: size.iScreen(2.2),
           ),
           onTap: () {
-            
             Navigator.popAndPushNamed(context, this.page);
           },
         ),
